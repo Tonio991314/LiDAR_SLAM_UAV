@@ -1,0 +1,44 @@
+<launch>
+
+    <!-- [args and params] declare some args and params  -->
+    <arg name="lidar_rpm" default="300"/>
+
+    <param name="/use_sim_time" value="false" />
+    <param name="robot_description"
+    textfile="$(find cartographer_ros)/urdf/online_3d.urdf" />
+
+    <!-- [Node] imu -->
+    <include file="$(find xsens_mti_driver)/launch/xsens_mti_node.launch">
+    </include>
+    
+    <!-- [Node] velodyne -->
+    <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
+        <arg name="rpm" value="$(arg lidar_rpm)" />
+    </include>
+
+    <!-- [Node] Cartographer SLAM -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher"
+    type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" 
+    type="joint_state_publisher" />
+
+    <node name="cartographer_node" pkg="cartographer_ros"
+        type="cartographer_node" args="
+            -configuration_directory $(find cartographer_ros)/configuration_files
+            -configuration_basename online_3d.lua"
+        output="screen">
+        <remap from="points2" to="/velodyne_points" />
+        <remap from="imu" to="/imu/data" />
+    </node>
+
+    <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+        type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+
+    <!-- [Node] robot pose publisher -->
+    <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" output="screen" />
+
+    <!-- [Node] Rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" required="true"
+        args="-d $(find cartographer_ros)/configuration_files/lx_3d.rviz" />
+
+</launch>
