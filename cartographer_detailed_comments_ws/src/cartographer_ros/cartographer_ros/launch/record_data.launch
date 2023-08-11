@@ -1,0 +1,20 @@
+<launch>
+
+    <!-- [args and params] declare some args and params  -->
+    <arg name="lidar_rpm" default="300"/>
+    <arg name="file_name" default="test.bag"/>
+
+    <!-- [Node] imu -->
+    <include file="$(find xsens_mti_driver)/launch/xsens_mti_node.launch">
+    </include>
+    
+    <!-- [Node] velodyne -->
+    <!-- <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
+        <arg name="rpm" value="$(arg lidar_rpm)" />
+    </include> -->
+
+    <!-- [Node] Record data -->
+     <node pkg="rosbag" type="record" name="record_velodyne_and_imu"
+       args="record -O /home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$(arg file_name) /imu/data"/>       
+
+</launch>
