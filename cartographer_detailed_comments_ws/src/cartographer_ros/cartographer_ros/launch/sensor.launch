@@ -1,0 +1,43 @@
+<launch>
+
+    <!-- [args and params] declare some args and params  -->
+    <arg name="sensor" default="n"/>
+    <arg name="mode" default="n"/>
+    <arg name="lidar_rpm" default="180"/>
+    <arg name="file_name" default="no.bag"/>
+
+    <arg name="imu_topic" default="/imu/data"/>
+    <arg name="lidar_topic" default="/velodyne_points"/>
+    <arg name="camera_topic" default="/camera/color/image_raw/compressed"/>
+
+    <!-- <param name="use_sim_time" value="true"/> -->
+
+    <group if="$(eval sensor != 'n')">
+        <!-- [Node] velodyne -->
+        <group if="$(eval 'l' in sensor)">
+            <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
+                <arg name="rpm" value="$(arg lidar_rpm)" />
+            </include>
+        </group>
+
+        <!-- [Node] imu -->
+        <group if="$(eval 'i' in sensor)">
+            <include file="$(find xsens_mti_driver)/launch/xsens_mti_node.launch"/>
+        </group>
+
+        <!-- [Node] camera -->
+        <group if="$(eval 'c' in sensor)">
+            <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
+        </group>
+    </group>
+
+    <!-- sync data -->
+    <!-- <node pkg="sync_data" type="sync_data.py" name="sync"  output="screen"/> -->
+
+    <!-- [Node] Record data -->
+    <group if="$(eval mode == 'r')">
+        <node pkg="rosbag" type="record" name="record_data"
+            args="record -O /home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$(arg file_name) $(arg imu_topic) $(arg lidar_topic) $(arg camera_topic)"/>       
+    </group>
+
+</launch>

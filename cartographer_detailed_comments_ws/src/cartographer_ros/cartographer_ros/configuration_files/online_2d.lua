@@ -8,7 +8,7 @@ options = {
 -- 下面两个frame需要修改为雷达的 坐标系，通常为laser
 -- 如果有imu 需要将 tracking_frame 更改为 imu的那个link
   tracking_frame = "imu_link",  
-  published_frame = "imu_link",  
+  published_frame = "base_link",  
   odom_frame = "odom",
   provide_odom_frame = false,
   publish_frame_projected_to_2d = false,

@@ -43,10 +43,17 @@
   </link>
 
   <!-- LiDAR to pixhawk -->
-  <joint name="LiDAR_to_imu" type="fixed">
-    <parent link="imu_link" />
+  <joint name="LiDAR_to_pixhawk" type="fixed">
+    <parent link="base_link" />
     <child link="velodyne" />
     <origin xyz="0.0 0.0 0.17" rpy="0. 0. 0." />
   </joint>
-  
+
+  <!-- imu to pixhawk -->
+  <joint name="imu_to_pixhawk" type="fixed">
+    <parent link="base_link" />
+    <child link="imu_link" />
+    <origin xyz="0.0 0.0 0.06" rpy="0. 0. 0" />
+  </joint>
+
 </robot>

@@ -1,8 +1,8 @@
 <launch>
 
     <!-- [args and params] declare some args and params  -->
-    <arg name="lidar_rpm" default="180"/>
-
+    <arg name="lidar_rpm" default="600"/> <!-- 3 Hz -->
+ 
     <param name="/use_sim_time" value="false" />
     <param name="robot_description"
     textfile="$(find cartographer_ros)/urdf/online_2d.urdf" />
@@ -27,7 +27,7 @@
             -configuration_directory $(find cartographer_ros)/configuration_files
             -configuration_basename online_2d.lua"
         output="screen">
-        <remap from="scan" to="/velodyne_points" />
+        <remap from="points2" to="/velodyne_points" />
         <remap from="imu" to="/imu/data" />
     </node>
 

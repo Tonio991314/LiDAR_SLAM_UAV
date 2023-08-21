@@ -179,5 +179,7 @@
   ],
   "python.analysis.extraPaths": [
     "/opt/ros/kinetic/lib/python2.7/dist-packages"
-  ]
+  ],
+  "cmake.configureOnOpen": true,
+  "cmake.sourceDirectory": "/home/drone/catkin_ws/cartographer_detailed_comments_ws/src/velodyne/velodyne_driver/src/driver"
 }

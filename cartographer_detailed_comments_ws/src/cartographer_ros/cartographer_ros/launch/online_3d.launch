@@ -1,7 +1,7 @@
 <launch>
 
     <!-- [args and params] declare some args and params  -->
-    <arg name="lidar_rpm" default="300"/>
+    <arg name="lidar_rpm" default="180"/>
 
     <param name="/use_sim_time" value="false" />
     <param name="robot_description"
