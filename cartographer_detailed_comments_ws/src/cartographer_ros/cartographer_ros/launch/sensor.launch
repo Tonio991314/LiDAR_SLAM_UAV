@@ -2,7 +2,6 @@
 
     <!-- [args and params] declare some args and params  -->
     <arg name="sensor" default="n"/>
-    <arg name="mode" default="n"/>
     <arg name="lidar_rpm" default="180"/>
     <arg name="file_name" default="no.bag"/>
 
@@ -31,13 +30,21 @@
         </group>
     </group>
 
-    <!-- sync data -->
-    <!-- <node pkg="sync_data" type="sync_data.py" name="sync"  output="screen"/> -->
 
     <!-- [Node] Record data -->
-    <group if="$(eval mode == 'r')">
+    <!-- <group if="$(eval mode == 'r')">
         <node pkg="rosbag" type="record" name="record_data"
             args="record -O /home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$(arg file_name) $(arg imu_topic) $(arg lidar_topic) $(arg camera_topic)"/>       
-    </group>
+    </group> -->
+
+    <!-- [Node] Record data -->
+    <!-- <group if="$(eval mode == 'r')">
+        <node name="sync_and_record_data" pkg="cartographer_ros" type="sync_data" output="screen">
+            <param name="imu_topic" value="imu_topic"/>
+            <param name="lidar_topic" value="lidar_topic"/>
+            <param name="camera_topic" value="camera_topic"/>
+            <param name="bag_file" value="bag_file"/>  
+        </node>
+    </group> -->
 
 </launch>
