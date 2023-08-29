@@ -16,11 +16,13 @@
 
 <launch>
   <param name="/use_sim_time" value="true" />
+  <arg name="id"/>
+  <arg name="bag_filename"/>
 
-  <include file="$(find cartographer_ros)/launch/backpack_3d.launch" />
+  <include file="$(find cartographer_ros)/launch/backpack_online_3d.launch" />
 
   <node name="rviz" pkg="rviz" type="rviz" required="true"
-      args="-d $(find cartographer_ros)/configuration_files/demo_3d.rviz" />
+      args="-d $(find cartographer_ros)/configuration_files/lx_3d.rviz" />
   <node name="playbag" pkg="rosbag" type="play"
-      args="--clock /home/drone/catkin_ws/cartographer_detailed_comments_ws/$(arg bag_filename)" />
+      args="--clock /home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$(arg id)/$(arg bag_filename)" />
 </launch>

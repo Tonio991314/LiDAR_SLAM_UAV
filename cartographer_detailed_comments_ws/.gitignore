@@ -3,5 +3,9 @@ devel/
 build_isolated/
 devel_isolated/
 install_isolated/
+
+bag_file/
+map/
+
 *~
 src/CMakeLists.txt

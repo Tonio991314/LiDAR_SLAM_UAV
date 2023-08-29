@@ -15,16 +15,20 @@
 -->
 
 <launch>
+  <arg name="urdf_filename" default="$(find cartographer_ros)/urdf/online_3d.urdf"/>
+  <arg name="id"/>
   <arg name="bag_filenames"/>
   <arg name="pose_graph_filename"/>
-  
+  <arg name="output_dir_path" default="/home/drone/catkin_ws/cartographer_detailed_comments_ws/map/"/>
+
   <node name="cartographer_assets_writer" pkg="cartographer_ros" required="true"
       type="cartographer_assets_writer" args="
           -configuration_directory $(find cartographer_ros)/configuration_files
-          -configuration_basename assets_writer_backpack_3d.lua
-          -urdf_filename $(find cartographer_ros)/urdf/backpack_3d.urdf
-          -bag_filenames $(arg bag_filenames)
-          -pose_graph_filename $(arg pose_graph_filename)"
+          -configuration_basename pbs2map.lua
+          -urdf_filename $(arg urdf_filename)
+          -bag_filenames /home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$(arg id)/$(arg bag_filenames)
+          -pose_graph_filename /home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$(arg id)/$(arg pose_graph_filename)
+          -output_file_prefix $(arg output_dir_path)/$(arg id)/"
       output="screen">
   </node>
 </launch>

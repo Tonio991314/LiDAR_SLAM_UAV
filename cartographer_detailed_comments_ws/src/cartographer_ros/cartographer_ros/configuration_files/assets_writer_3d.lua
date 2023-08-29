@@ -33,12 +33,12 @@ options = {
     },
     {
       action = "write_pcd",
-      filename = "b3_1.pcd",
+      filename = "test.pcd",
     },
-  --  {
-  --    action = "write_ply",
-  --    filename = "points.ply",
-  --  },
+    {
+      action = "write_ply",
+      filename = "test.ply",
+    },
   --   {
   --     action = "write_xray_image",
   --     voxel_size = VOXEL_SIZE,
