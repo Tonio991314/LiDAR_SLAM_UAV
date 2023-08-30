@@ -1,7 +1,7 @@
 <launch>
 
     <!-- [args and params] declare some args and params  -->
-    <arg name="lidar_rpm" default="600"/> <!-- 3 Hz -->
+    <arg name="lidar_rpm" default="300"/> <!-- 5 Hz -->
  
     <param name="/use_sim_time" value="false" />
     <param name="robot_description"
@@ -11,10 +11,13 @@
     <include file="$(find xsens_mti_driver)/launch/xsens_mti_node.launch">
     </include>
     
-    <!-- [Node] velodyne -->
+    <!-- [Node] velodyne --> 
     <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
         <arg name="rpm" value="$(arg lidar_rpm)" />
     </include>
+
+    <!-- [Node] camera -->
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
 
     <!-- [Node] Cartographer SLAM -->
     <node name="robot_state_publisher" pkg="robot_state_publisher"
@@ -38,7 +41,7 @@
     <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" output="screen" />
 
     <!-- [Node] Rviz -->
-    <node name="rviz" pkg="rviz" type="rviz" required="true"
-        args="-d $(find cartographer_ros)/configuration_files/lx_2d.rviz" />
+    <!-- <node name="rviz" pkg="rviz" type="rviz" required="true"
+        args="-d $(find cartographer_ros)/configuration_files/lx_2d.rviz" /> -->
 
 </launch>

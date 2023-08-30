@@ -4,7 +4,7 @@ source devel/setup.bash
 id=$1
 
 ## make directory
-output_dir="./bag_file/$id/img"
+output_dir="./bag_file/$id/"
 if [ ! -d "$output_dir" ]; then
     echo "makng directory ..."
     mkdir -p "$output_dir"
