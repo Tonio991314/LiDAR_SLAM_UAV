@@ -38,8 +38,10 @@
         type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
 
     <!-- [Node] robot pose publisher -->
-    <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" output="screen" />
-
+    <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" output="screen" >
+        <param name="base_frame" type="string" value="/imu_link" />
+        <remap from="robot_pose" to="online_2d_robot_pose" />
+    </node>
     <!-- [Node] Rviz -->
     <!-- <node name="rviz" pkg="rviz" type="rviz" required="true"
         args="-d $(find cartographer_ros)/configuration_files/lx_2d.rviz" /> -->

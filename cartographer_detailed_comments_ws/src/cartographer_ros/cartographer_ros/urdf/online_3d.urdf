@@ -8,6 +8,9 @@
   <material name="gray">
     <color rgba="0.2 0.2 0.2 1" />
   </material>
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1" />
+  </material>
 
   <!-- LiDAR -->
   <link name="velodyne">
@@ -31,6 +34,17 @@
     </visual>
   </link>
 
+  <!-- camera -->
+  <link name="camera_link">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.090 0.025 0.025" />
+      </geometry>
+      <material name="gray" />
+    </visual>
+  </link>
+
   <!-- pixhawk -->
   <link name="base_link">
     <visual>
@@ -38,7 +52,7 @@
       <geometry>
         <box size="0.044 0.0848 0.0124" />
       </geometry>
-      <material name="gray" />
+      <material name="black" />
     </visual>
   </link>
 
@@ -46,14 +60,21 @@
   <joint name="LiDAR_to_pixhawk" type="fixed">
     <parent link="base_link" />
     <child link="velodyne" />
-    <origin xyz="0.0 0.0 0.17" rpy="0. 0. 0." />
+    <origin xyz="0.0 0.0 0.17" rpy="0. 0. 0." /> <!-- need to measure !!! -->
   </joint>
 
   <!-- imu to pixhawk -->
   <joint name="imu_to_pixhawk" type="fixed">
     <parent link="base_link" />
     <child link="imu_link" />
-    <origin xyz="0.0 0.0 0.06" rpy="0. 0. 0" />
+    <origin xyz="0.0 0.0 0.06" rpy="0. 0. 0" /> <!-- need to measure !!! -->
+  </joint>
+
+  <!-- camera to pixhawk -->
+  <joint name="camera_to_pixhawk" type="fixed">
+    <parent link="base_link" />
+    <child link="camera_link" />
+    <origin xyz="0.0 0.0 0.06" rpy="0. 0. 0" /> <!-- need to measure !!! -->
   </joint>
 
 </robot>

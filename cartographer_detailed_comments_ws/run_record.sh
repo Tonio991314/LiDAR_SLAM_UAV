@@ -2,6 +2,13 @@ source devel/setup.bash
 
 
 id=$1
+mode=$2 
+
+$lidar_topic="/velodyne_points"
+$imu_topic="/imu/data"
+$color_image_topic="/camera/color/image_raw/compressed"
+$depth_image_topic="/camera/depth/image_rect_raw/compressed"
+$online_2d_robot_pose="/online_2d_robot_pose"
 
 ## make directory
 output_dir="./bag_file/$id/"
@@ -14,4 +21,10 @@ else
 fi
 
 ## record image
-rosrun data_processing record_sync_data.py $id
+if [ $mode == 'on' ]
+then
+    rosbag record -O /bag_file/$id/${id}.bag $lidar_topic $imu_topic $color_image_topic $depth_image_topic $online_2d_robot_pose
+elif [ $mode == "off" ]
+then
+    rosrun data_processing record_sync_data.py $id
+fi
