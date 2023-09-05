@@ -60,7 +60,8 @@ class Plotting:
                 )
             )
 
-        plt.title("test")
+        plt.title("2D real-time map")
         plt.axis("equal")
+        plt.savefig("/home/drone/catkin_ws/cartographer_detailed_comments_ws/src/path_planning/figure/map.png")
         plt.show()
     

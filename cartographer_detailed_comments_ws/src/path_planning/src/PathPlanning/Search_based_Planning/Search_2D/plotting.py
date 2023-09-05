@@ -26,6 +26,7 @@ class Plotting:
         self.plot_grid(name)
         self.plot_visited(visited)
         self.plot_path(path)
+        plt.savefig(f"/home/drone/catkin_ws/cartographer_detailed_comments_ws/src/path_planning/src/PathPlanning/Search_based_Planning/Search_2D/figure/{name}.png", bbox_inches='tight', pad_inches=0, dpi=500)
         plt.show()
 
     def animation_lrta(self, path, visited, name):

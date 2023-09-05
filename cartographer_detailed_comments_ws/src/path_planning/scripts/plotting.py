@@ -23,12 +23,12 @@ class Plotting:
     def animation(self, nodelist, path, name, animation=False):
         self.plot_grid(name)
         self.plot_visited(nodelist, animation)
-        self.plot_path(path)
+        self.plot_path(path, name)
 
     def animation_connect(self, V1, V2, path, name):
         self.plot_grid(name)
         self.plot_visited_connect(V1, V2)
-        self.plot_path(path)
+        self.plot_path(path, name)
 
     def plot_grid(self, name):
         fig, ax = plt.subplots()
@@ -108,8 +108,9 @@ class Plotting:
         plt.pause(0.01)
 
     @staticmethod
-    def plot_path(path):
+    def plot_path(path, name):
         if len(path) != 0:
             plt.plot([x[0] for x in path], [x[1] for x in path], '-r', linewidth=2)
             plt.pause(0.01)
+        plt.savefig(f"/home/drone/catkin_ws/cartographer_detailed_comments_ws/src/path_planning/figure/{name}.png", bbox_inches='tight', pad_inches=0)
         plt.show()
