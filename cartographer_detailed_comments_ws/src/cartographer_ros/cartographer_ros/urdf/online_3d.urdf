@@ -8,10 +8,8 @@
   <material name="gray">
     <color rgba="0.2 0.2 0.2 1" />
   </material>
-  <material name="black">
-    <color rgba="0.0 0.0 0.0 1" />
-  </material>
 
+  <!-- ========================= link ========================= -->
   <!-- LiDAR -->
   <link name="velodyne">
     <visual>
@@ -26,7 +24,8 @@
   <!-- IMU -->
   <link name="imu_link">
     <visual>
-      <origin xyz="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 0.0" rpy="0. 0. 0." />
+      <axis rpy="0. 0. 1.57" />
       <geometry>
         <box size="0.0315 0.028 0.013" />
       </geometry>
@@ -45,36 +44,48 @@
     </visual>
   </link>
 
+  <!-- base_link -->
+  <link name="base_link"/>
+
   <!-- pixhawk -->
-  <link name="base_link">
+  <!-- <link name="base_link">
     <visual>
       <origin xyz="0.0 0.0 0.0" />
       <geometry>
         <box size="0.044 0.0848 0.0124" />
       </geometry>
-      <material name="black" />
+      <material name="gray" />
     </visual>
-  </link>
+  </link> -->
 
-  <!-- LiDAR to pixhawk -->
-  <joint name="LiDAR_to_pixhawk" type="fixed">
+  <!-- ========================= joint ========================= -->
+  <!-- imu to base -->
+  <joint name="imu_to_base" type="fixed">
+    <parent link="base_link" />
+    <child link="imu_link" />
+    <origin xyz="0.0 0.0 0.0" rpy="0. 0. 0." />
+  </joint>
+
+  <!-- LiDAR to base -->
+  <joint name="LiDAR_to_base" type="fixed">
     <parent link="base_link" />
     <child link="velodyne" />
-    <origin xyz="0.0 0.0 0.17" rpy="0. 0. 0." /> <!-- need to measure !!! -->
+    <origin xyz="0.0 0.0 0.13104" rpy="0. 0. 0." />
   </joint>
 
   <!-- imu to pixhawk -->
-  <joint name="imu_to_pixhawk" type="fixed">
+  <!-- <joint name="imu_to_pixhawk" type="fixed">
     <parent link="base_link" />
     <child link="imu_link" />
-    <origin xyz="0.0 0.0 0.06" rpy="0. 0. 0" /> <!-- need to measure !!! -->
-  </joint>
+    <origin xyz="0.0 0.0 0.06" rpy="0. 0. 0" />
+  </joint> -->
 
-  <!-- camera to pixhawk -->
-  <joint name="camera_to_pixhawk" type="fixed">
+  <!-- camera to base -->
+  <joint name="camera_to_base" type="fixed">
     <parent link="base_link" />
     <child link="camera_link" />
-    <origin xyz="0.0 0.0 0.06" rpy="0. 0. 0" /> <!-- need to measure !!! -->
+    <origin xyz="-0.0175 0.0765 0.0125" rpy="0. 0. 0." /> <!-- need to measure !!! -->
   </joint>
+
 
 </robot>

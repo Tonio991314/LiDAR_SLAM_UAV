@@ -69,7 +69,7 @@ Visualization Manager:
         GPS_front_link:
           Value: true
         base_link:
-          Value: true
+          Value: false
         footprint:
           Value: true
         front_laser_link:
@@ -86,15 +86,16 @@ Visualization Manager:
       Tree:
         map:
           footprint:
-            base_link:
-              GPS_back_link:
-                {}
-              GPS_front_link:
-                {}
-              front_laser_link:
-                {}
-              imu_link:
-                {}
+            imu_link:
+            # base_link:
+            #   GPS_back_link:
+            #     {}
+            #   GPS_front_link:
+            #     {}
+            #   front_laser_link:
+            #     {}
+            #   imu_link:
+            #     {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -124,7 +125,7 @@ Visualization Manager:
         All: true
         All Submap Pose Markers: true
       Topic: /submap_list
-      Tracking frame: base_link
+      Tracking frame: imu_link
       Unreliable: false
       Value: false
     - Alpha: 1

@@ -12,7 +12,7 @@ options = {
   odom_frame = "odom",
   provide_odom_frame = false,
   publish_frame_projected_to_2d = false,
-  -- use_pose_extrapolator = true,
+  use_pose_extrapolator = false,
 
   use_odometry = false,
   use_nav_sat = false,
@@ -31,32 +31,62 @@ options = {
   fixed_frame_pose_sampling_ratio = 1.,
   imu_sampling_ratio = 1.,
   landmarks_sampling_ratio = 1.,
+
+  publish_tracked_pose = true,
 }
 
+
 MAP_BUILDER.use_trajectory_builder_3d = true
-   TRAJECTORY_BUILDER_3D.num_accumulated_range_data = 1
-   TRAJECTORY_BUILDER_3D.min_range = 0.3
-  --  defualt 60 
-   TRAJECTORY_BUILDER_3D.max_range = 30.
-   TRAJECTORY_BUILDER_2D.min_z = 0.1
-   TRAJECTORY_BUILDER_2D.max_z = 1.0
-   TRAJECTORY_BUILDER_3D.use_online_correlative_scan_matching = false
-MAP_BUILDER.num_background_threads = 8  -- 后端的线条数，越大实时性越好
-   POSE_GRAPH.optimization_problem.huber_scale = 5e2
+MAP_BUILDER.num_background_threads = 8
 
-  -- 设置为0，关闭global slam （取消后端优化，此时再出现建图问题就是前端的锅了）
-  -- default:60 
-   POSE_GRAPH.optimize_every_n_nodes = 320   -- 多少个点优化一次  越小优化频率越高
 
-   POSE_GRAPH.constraint_builder.sampling_ratio = 0.03  
-   POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 10
-   POSE_GRAPH.constraint_builder.min_score = 0.6
-   POSE_GRAPH.constraint_builder.global_localization_min_score = 0.60
+--LOCAL SLAM FIX FOR Z 
 
-   POSE_GRAPH.optimization_problem.odometry_translation_weight = 1e3
-   POSE_GRAPH.optimization_problem.odometry_rotation_weight = 1e3
-   
-   POSE_GRAPH.constraint_builder.log_matches = true
-   POSE_GRAPH.optimization_problem.log_solver_summary = true
+TRAJECTORY_BUILDER_3D.num_accumulated_range_data = 1
+TRAJECTORY_BUILDER_3D.min_range = 2.5
+TRAJECTORY_BUILDER_3D.max_range = 100
+TRAJECTORY_BUILDER_3D.submaps.num_range_data = 150
+TRAJECTORY_BUILDER_3D.voxel_filter_size = 0.1
+
+-- TRAJECTORY_BUILDER_3D.motion_filter.max_angle_radians = math.rad(0.01)
+-- TRAJECTORY_BUILDER_3D.motion_filter.max_distance_meters = 20
+-- TRAJECTORY_BUILDER_3D.motion_filter.max_time_seconds = 1
+
+TRAJECTORY_BUILDER_3D.use_online_correlative_scan_matching = true --true
+TRAJECTORY_BUILDER_3D.real_time_correlative_scan_matcher.linear_search_window = 0.1
+TRAJECTORY_BUILDER_3D.real_time_correlative_scan_matcher.translation_delta_cost_weight = 10.
+TRAJECTORY_BUILDER_3D.real_time_correlative_scan_matcher.rotation_delta_cost_weight = 0.1
+
+TRAJECTORY_BUILDER_3D.ceres_scan_matcher.translation_weight = 0.1
+TRAJECTORY_BUILDER_3D.ceres_scan_matcher.rotation_weight = 0.1
+TRAJECTORY_BUILDER_3D.ceres_scan_matcher.ceres_solver_options.max_num_iterations = 100
+
+
+POSE_GRAPH.optimization_problem.log_solver_summary = true
+
+-- GLOBAL_SLAM FIX FOR Z
+-- POSE_GRAPH.optimization_problem.acceleration_weight = 500
+-- POSE_GRAPH.optimization_problem.rotation_weight = 100
+
+--Wait changing this really helped....find out why?
+
+-- POSE_GRAPH.optimization_problem.acceleration_weight = 1e3
+-- POSE_GRAPH.optimization_problem.rotation_weight = 3e5
+
+
+POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 200
+POSE_GRAPH.optimization_problem.huber_scale = 5e2
+POSE_GRAPH.optimize_every_n_nodes = 32
+POSE_GRAPH.constraint_builder.sampling_ratio = 0.1
+POSE_GRAPH.global_sampling_ratio = 0.003
+POSE_GRAPH.constraint_builder.min_score = 0.50
+POSE_GRAPH.constraint_builder.global_localization_min_score = 0.55
+
+POSE_GRAPH.constraint_builder.max_constraint_distance = 20.
+POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher_3d.linear_xy_search_window = 50.
+POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher_3d.linear_z_search_window = 30.
+POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher_3d.angular_search_window = math.rad(60.)
+POSE_GRAPH.constraint_builder.ceres_scan_matcher_3d.ceres_solver_options.max_num_iterations = 50
+
 
 return options

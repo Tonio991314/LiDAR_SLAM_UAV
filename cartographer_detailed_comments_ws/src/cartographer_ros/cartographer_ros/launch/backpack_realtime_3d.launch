@@ -17,7 +17,7 @@
 <launch>
   <!-- [Node] Cartographer SLAM -->
   <param name="robot_description"
-    textfile="$(find cartographer_ros)/urdf/online_3d.urdf" />
+    textfile="$(find cartographer_ros)/urdf/offline_3d.urdf" />
 
   <node name="robot_state_publisher" pkg="robot_state_publisher"
     type="robot_state_publisher" />
@@ -25,10 +25,11 @@
   <node name="cartographer_node" pkg="cartographer_ros"
       type="cartographer_node" args="
           -configuration_directory $(find cartographer_ros)/configuration_files
-          -configuration_basename online_3d.lua"
+          -configuration_basename offline_3d.lua"
       output="screen">
     <remap from="points2" to="/velodyne_points" />
     <remap from="imu" to="/imu/data" />
+    <remap from="odom" to="odom" />
   </node>
 
   <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"

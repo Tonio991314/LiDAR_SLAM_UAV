@@ -8,11 +8,11 @@ options = {
 -- 下面两个frame需要修改为雷达的 坐标系，通常为laser
 -- 如果有imu 需要将 tracking_frame 更改为 imu的那个link
   tracking_frame = "imu_link",  
-  published_frame = "base_link",  
+  published_frame = "imu_link",
   odom_frame = "odom",
-  provide_odom_frame = false,
+  provide_odom_frame = true,
   publish_frame_projected_to_2d = false,
-  -- use_pose_extrapolator = true,
+  use_pose_extrapolator = true,
 
   use_odometry = false,
   use_nav_sat = false,
@@ -34,29 +34,34 @@ options = {
 }
 
 MAP_BUILDER.use_trajectory_builder_3d = true
-   TRAJECTORY_BUILDER_3D.num_accumulated_range_data = 1
-   TRAJECTORY_BUILDER_3D.min_range = 0.3
-  --  defualt 60 
-   TRAJECTORY_BUILDER_3D.max_range = 30.
-   TRAJECTORY_BUILDER_2D.min_z = 0.1
-   TRAJECTORY_BUILDER_2D.max_z = 1.0
-   TRAJECTORY_BUILDER_3D.use_online_correlative_scan_matching = false
-MAP_BUILDER.num_background_threads = 8  -- 后端的线条数，越大实时性越好
-   POSE_GRAPH.optimization_problem.huber_scale = 5e2
+--MAP_BUILDER.num_background_threads = 7
 
-  -- 设置为0，关闭global slam （取消后端优化，此时再出现建图问题就是前端的锅了）
-  -- default:60 
-   POSE_GRAPH.optimize_every_n_nodes = 320   -- 多少个点优化一次  越小优化频率越高
+TRAJECTORY_BUILDER_3D.min_range = 0.3
+TRAJECTORY_BUILDER_3D.max_range = 5.
+TRAJECTORY_BUILDER_3D.voxel_filter_size = 0.1
+TRAJECTORY_BUILDER_3D.high_resolution_adaptive_voxel_filter.max_range = 60.
+TRAJECTORY_BUILDER_3D.use_online_correlative_scan_matching = false
 
-   POSE_GRAPH.constraint_builder.sampling_ratio = 0.03  
-   POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 10
-   POSE_GRAPH.constraint_builder.min_score = 0.6
-   POSE_GRAPH.constraint_builder.global_localization_min_score = 0.60
+TRAJECTORY_BUILDER_3D.ceres_scan_matcher.occupied_space_weight_0 = 1.
+TRAJECTORY_BUILDER_3D.ceres_scan_matcher.occupied_space_weight_1 = 1.
+TRAJECTORY_BUILDER_3D.ceres_scan_matcher.translation_weight = 1.0
+TRAJECTORY_BUILDER_3D.ceres_scan_matcher.rotation_weight = 1.0
+TRAJECTORY_BUILDER_3D.motion_filter.max_time_seconds = 2.
+TRAJECTORY_BUILDER_3D.motion_filter.max_distance_meters = 0.5
+TRAJECTORY_BUILDER_3D.motion_filter.max_angle_radians = 0.1
 
-   POSE_GRAPH.optimization_problem.odometry_translation_weight = 1e3
-   POSE_GRAPH.optimization_problem.odometry_rotation_weight = 1e3
-   
-   POSE_GRAPH.constraint_builder.log_matches = true
-   POSE_GRAPH.optimization_problem.log_solver_summary = true
+TRAJECTORY_BUILDER_3D.submaps.num_range_data = 120.
+TRAJECTORY_BUILDER_3D.submaps.high_resolution_max_range = 60.
+
+POSE_GRAPH.optimize_every_n_nodes = 30.
+POSE_GRAPH.constraint_builder.sampling_ratio = 0.3
+POSE_GRAPH.constraint_builder.max_constraint_distance = 15.
+POSE_GRAPH.constraint_builder.min_score = 0.40
+POSE_GRAPH.constraint_builder.global_localization_min_score = 0.5
+POSE_GRAPH.constraint_builder.log_matches = false
+POSE_GRAPH.log_residual_histograms = false
+
+--POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 10
+--POSE_GRAPH.optimization_problem.huber_scale = 5e2
 
 return options

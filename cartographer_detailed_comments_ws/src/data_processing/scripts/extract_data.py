@@ -10,13 +10,14 @@ import numpy as np
 import logging
 
 
-extract_topics = {"rgb": "/camera/color/image_raw/compressed",
+extract_topics = {"rgb_comp": "/camera/color/image_raw/compressed",
+                  "rgb": "/camera/color/image_raw",
                   "depth": "/camera/depth/image_rect_raw/compressedDepth",
                   "imu": "/imu/data",
                   "lidar": "/velodyne_points",
                   }
 
-def extract_images(bag_file, topic_name, output_directory):
+def extract_images(bag_file, data, topic_name, output_directory):
     bridge = CvBridge()
     
     if not os.path.exists(output_directory):
@@ -28,8 +29,11 @@ def extract_images(bag_file, topic_name, output_directory):
             stamp = msg.header.stamp
             timestamp = "{}.{}".format(stamp.secs, stamp.nsecs)
 
-            arr = np.fromstring(msg.data, np.uint8)
-            image = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+            if data == "rgb_comp":
+                arr = np.fromstring(msg.data, np.uint8)
+                image = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+            elif data == "rgb":
+                image = bridge.imgmsg_to_cv2(msg, "bgr8")
             filename = os.path.join(output_directory, "image_" + timestamp + ".jpg")
 
             cv2.imwrite(filename, image)
@@ -53,7 +57,7 @@ if __name__ == "__main__":
         os.makedirs(output_folder)
 
     if args.data == "rgb":
-        extract_images(bag_file_path, topic_to_extract, output_folder)
+        extract_images(bag_file_path, args.data, topic_to_extract, output_folder)
 
 
 

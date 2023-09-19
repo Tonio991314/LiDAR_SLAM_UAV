@@ -19,7 +19,7 @@
   <arg name="id"/>
   <arg name="bag_filename"/>
 
-  <include file="$(find cartographer_ros)/launch/backpack_online_3d.launch" />
+  <include file="$(find cartographer_ros)/launch/backpack_realtime_3d.launch" />
 
   <node name="rviz" pkg="rviz" type="rviz" required="true"
       args="-d $(find cartographer_ros)/configuration_files/lx_3d.rviz" />

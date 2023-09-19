@@ -12,8 +12,16 @@ source devel_isolated/setup.bash
 # pose_graph_file="${pose_graph_paths[-1]}"
 
 id=$1
+
 bag_file_path="/home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$id/$id.bag"
-pose_graph_path="/home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$id/$id.bag.pbstream"
+pose_graph_path="/home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$id/$id.pbstream"
+
+
+# finish slam
+rosservice call /finish_trajectory 0
+
+# make pbstream
+rosservice call /write_state "{filename: '${pose_graph_path}'}"
 
 ######### make directory #########
 folder_path="/home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$id/map"

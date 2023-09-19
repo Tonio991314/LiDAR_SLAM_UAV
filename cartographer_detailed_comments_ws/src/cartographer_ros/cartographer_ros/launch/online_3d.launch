@@ -19,8 +19,8 @@
     <!-- [Node] Cartographer SLAM -->
     <node name="robot_state_publisher" pkg="robot_state_publisher"
     type="robot_state_publisher" />
-    <node name="joint_state_publisher" pkg="joint_state_publisher" 
-    type="joint_state_publisher" />
+    <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" 
+    type="joint_state_publisher" /> -->
 
     <node name="cartographer_node" pkg="cartographer_ros"
         type="cartographer_node" args="

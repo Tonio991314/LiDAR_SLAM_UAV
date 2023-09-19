@@ -2,6 +2,13 @@
 
     <!-- [args and params] declare some args and params  -->
     <arg name="lidar_rpm" default="300"/> <!-- 5 Hz -->
+    <arg name="align_depth" default="true" />
+    <arg name="depth_width" default="640" />
+    <arg name="depth_height" default="480" />
+    <arg name="depth_fps" default="30" />
+    <arg name="color_width" default="640" />
+    <arg name="color_height" default="480" />
+    <arg name="color_fps" default="30" />
  
     <param name="/use_sim_time" value="false" />
     <param name="robot_description"
@@ -17,20 +24,30 @@
     </include>
 
     <!-- [Node] camera -->
-    <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+        <arg name="align_depth" value="$(arg align_depth)" />
+        <arg name="depth_width" value="$(arg depth_width)" />
+        <arg name="depth_height" value="$(arg depth_height)" />
+        <arg name="depth_fps" value="$(arg depth_fps)" />
+        <arg name="color_width" value="$(arg color_width)" />
+        <arg name="color_height" value="$(arg color_height)" />
+        <arg name="color_fps" value="$(arg color_fps)" />
+    </include>
 
     <!-- [Node] Cartographer SLAM -->
     <node name="robot_state_publisher" pkg="robot_state_publisher"
     type="robot_state_publisher" />
-    <node name="joint_state_publisher" pkg="joint_state_publisher" 
-    type="joint_state_publisher" />
+    <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" 
+    type="joint_state_publisher" /> -->
 
     <node name="cartographer_node" pkg="cartographer_ros"
         type="cartographer_node" args="
             -configuration_directory $(find cartographer_ros)/configuration_files
-            -configuration_basename online_2d.lua"
+            -configuration_basename online_2d_.lua"
         output="screen">
-        <remap from="points2" to="/velodyne_points" />
+        <!-- <remap from="points2" to="/velodyne_points" /> -->
+        <remap from="scan" to="/scan"/>
+        <remap from="odom" to="/odom"/> 
         <remap from="imu" to="/imu/data" />
     </node>
 
@@ -40,10 +57,12 @@
     <!-- [Node] robot pose publisher -->
     <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" output="screen" >
         <param name="base_frame" type="string" value="/imu_link" />
+        <param name="publish_frequency" type="int" value="30" />
         <remap from="robot_pose" to="online_2d_robot_pose" />
     </node>
+    
     <!-- [Node] Rviz -->
-    <!-- <node name="rviz" pkg="rviz" type="rviz" required="true"
-        args="-d $(find cartographer_ros)/configuration_files/lx_2d.rviz" /> -->
+    <node name="rviz" pkg="rviz" type="rviz" required="true"
+        args="-d $(find cartographer_ros)/configuration_files/lx_2d.rviz" />
 
 </launch>
