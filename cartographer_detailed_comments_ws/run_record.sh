@@ -17,7 +17,7 @@ output_dir="./bag_file/${id}/"
 if [ ! -d "$output_dir" ]; then
     echo "makng directory ..."
     mkdir -p "$output_dir"
-    echo "directory created"s
+    echo "directory created"
 else
     echo "directory already exists"
 fi
@@ -25,7 +25,7 @@ fi
 ## record image
 if [ $mode == 'on' ]
 then
-    rosbag record -O /home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/${id}/${id}.bag $color_image_topic
+    rosbag record -O /home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/${id}/${id}.bag $aligned_depth_image_topic
 elif [ $mode == "off" ]
 then
     rosrun data_processing record_sync_data.py $id
