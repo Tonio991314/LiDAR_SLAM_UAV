@@ -25,7 +25,7 @@
   <link name="imu_link">
     <visual>
       <origin xyz="0.0 0.0 0.0" rpy="0. 0. 0." />
-      <axis rpy="0. 0. 1.57" />
+      <axis rpy="0. 0. 0." />
       <geometry>
         <box size="0.0315 0.028 0.013" />
       </geometry>
@@ -70,7 +70,7 @@
   <joint name="LiDAR_to_base" type="fixed">
     <parent link="base_link" />
     <child link="velodyne" />
-    <origin xyz="0.0 0.0 0.13104" rpy="0. 0. 0." />
+    <origin xyz="0.0 0.0 0.13304" rpy="0. 0. 0." />
   </joint>
 
   <!-- imu to pixhawk -->
@@ -84,7 +84,7 @@
   <joint name="camera_to_base" type="fixed">
     <parent link="base_link" />
     <child link="camera_link" />
-    <origin xyz="-0.0175 0.0765 0.0125" rpy="0. 0. 0." /> <!-- need to measure !!! -->
+    <origin xyz="0.0325 -0.092 0.02274" rpy="-1.5707963 0. 3.1415926" />
   </joint>
 
 

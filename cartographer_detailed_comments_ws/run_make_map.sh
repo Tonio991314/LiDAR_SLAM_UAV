@@ -24,7 +24,7 @@ rosservice call /finish_trajectory 0
 rosservice call /write_state "{filename: '${pose_graph_path}'}"
 
 ######### make directory #########
-folder_path="/home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$id/map"
+folder_path="/home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$id/$id/map"
 if [ ! -d "$folder_path" ]; then
     echo "makng directory ..."
     mkdir -p "$folder_path"

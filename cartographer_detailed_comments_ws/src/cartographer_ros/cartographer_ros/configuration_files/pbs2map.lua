@@ -75,10 +75,10 @@ options = {
       filename = "xray_xz_all_color",
       transform = XZ_TRANSFORM,
     },
-    {
-      action = "write_pcd",
-      filename = "map.pcd",
-    },
+    -- {
+    --   action = "write_pcd",
+    --   filename = "map.pcd",
+    -- },
     {
       action = "write_ply",
       filename = "map.ply",

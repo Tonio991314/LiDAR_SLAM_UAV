@@ -4,7 +4,7 @@ import rospy
 from nav_msgs.msg import OccupancyGrid
 import plot_map 
 
-
+count = 0
 def callback(data):
     rospy.loginfo("width: %d, height: %d", data.info.width, data.info.height)
     # rospy.loginfo("origin: %f, %f", data.info.origin.position.x, data.info.origin.position.y)
@@ -12,8 +12,10 @@ def callback(data):
     # rospy.loginfo("data length: %d", len(data.data))
 
 def draw_map(data):
+    global count
     plot = plot_map.Plotting(data)
-    plot.plot_map()
+    plot.plot_map(count)
+    count+=1
 
 def map_listener():
     rospy.init_node('map_listener', anonymous=True)

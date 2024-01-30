@@ -25,8 +25,8 @@ then
     if [ $mode == 'off' ]
     then 
         roslaunch cartographer_ros offline_2d.launch id:=$id bag_filenames:=$bag_file
-    # elif [ $mode == 'on' ]
-    # then 
-    #     roslaunch cartographer_ros demo_backpack_online_2d.launch id:=$id bag_filename:=$bag_file
+    elif [ $mode == 're' ]
+    then 
+        roslaunch cartographer_ros demo_backpack_realtime_2d.launch id:=$id bag_filename:=$bag_file
     fi
 fi

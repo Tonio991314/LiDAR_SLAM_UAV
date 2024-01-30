@@ -8,7 +8,7 @@ options = {
 -- 下面两个frame需要修改为雷达的 坐标系，通常为laser
 -- 如果有imu 需要将 tracking_frame 更改为 imu的那个link
   tracking_frame = "imu_link",  
-  published_frame = "imu_link",
+  published_frame = "base_link",
   odom_frame = "odom",
   provide_odom_frame = true,
   publish_frame_projected_to_2d = false,
@@ -53,7 +53,7 @@ TRAJECTORY_BUILDER_3D.motion_filter.max_angle_radians = 0.1
 TRAJECTORY_BUILDER_3D.submaps.num_range_data = 120.
 TRAJECTORY_BUILDER_3D.submaps.high_resolution_max_range = 60.
 
-POSE_GRAPH.optimize_every_n_nodes = 30.
+POSE_GRAPH.optimize_every_n_nodes = 320.
 POSE_GRAPH.constraint_builder.sampling_ratio = 0.3
 POSE_GRAPH.constraint_builder.max_constraint_distance = 15.
 POSE_GRAPH.constraint_builder.min_score = 0.40

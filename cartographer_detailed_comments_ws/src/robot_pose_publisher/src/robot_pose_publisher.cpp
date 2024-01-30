@@ -29,35 +29,44 @@ int main(int argc, char ** argv)
   ros::NodeHandle nh_priv("~");
 
   // configuring parameters
-  std::string map_frame, base_frame;
+  std::string map_frame, base_frame, camera_frame;
   double publish_frequency;
   bool is_stamped;
-  ros::Publisher p_pub;
+  ros::Publisher p_pub, camera_pose_pub;
 
   nh_priv.param<std::string>("map_frame",map_frame,"/map");
   nh_priv.param<std::string>("base_frame",base_frame,"/base_link");
+  nh_priv.param<std::string>("camera_frame",camera_frame,"/camera_link");
+
   nh_priv.param<double>("publish_frequency",publish_frequency,10);
   nh_priv.param<bool>("is_stamped", is_stamped, true);
 
-  if(is_stamped)
+  if(is_stamped){
     p_pub = nh.advertise<geometry_msgs::PoseStamped>("robot_pose", 1);
-  else 
+    camera_pose_pub = nh.advertise<geometry_msgs::PoseStamped>("camera_pose", 1); // Add this line
+  }
+  else{
     p_pub = nh.advertise<geometry_msgs::Pose>("robot_pose", 1);
+    camera_pose_pub = nh.advertise<geometry_msgs::Pose>("camera_pose", 1);
+  } 
 
   // create the listener
   tf::TransformListener listener;
   listener.waitForTransform(map_frame, base_frame, ros::Time(), ros::Duration(1.0));
+  
 
   ros::Rate rate(publish_frequency);
   while (nh.ok())
   {
-    tf::StampedTransform transform;
+    tf::StampedTransform transform, camera_transform;
     try
     {
       listener.lookupTransform(map_frame, base_frame, ros::Time(0), transform);
+      listener.lookupTransform(map_frame, camera_frame, ros::Time(0), camera_transform); // Add this line
+
 
       // construct a pose message
-      geometry_msgs::PoseStamped pose_stamped;
+      geometry_msgs::PoseStamped pose_stamped, camera_pose_stamped;
       pose_stamped.header.frame_id = map_frame;
       pose_stamped.header.stamp = ros::Time::now();
 
@@ -70,10 +79,27 @@ int main(int argc, char ** argv)
       pose_stamped.pose.position.y = transform.getOrigin().getY();
       pose_stamped.pose.position.z = transform.getOrigin().getZ();
 
-      if(is_stamped)
+      camera_pose_stamped.header.frame_id = map_frame;
+      camera_pose_stamped.header.stamp = ros::Time::now();
+
+      camera_pose_stamped.pose.orientation.x = camera_transform.getRotation().getX();
+      camera_pose_stamped.pose.orientation.y = camera_transform.getRotation().getY();
+      camera_pose_stamped.pose.orientation.z = camera_transform.getRotation().getZ();
+      camera_pose_stamped.pose.orientation.w = camera_transform.getRotation().getW();
+
+      camera_pose_stamped.pose.position.x = camera_transform.getOrigin().getX();
+      camera_pose_stamped.pose.position.y = camera_transform.getOrigin().getY();
+      camera_pose_stamped.pose.position.z = camera_transform.getOrigin().getZ();
+
+
+      if(is_stamped){
         p_pub.publish(pose_stamped);
-      else
+        camera_pose_pub.publish(camera_pose_stamped);
+      }
+      else{
         p_pub.publish(pose_stamped.pose);
+        camera_pose_pub.publish(camera_pose_stamped.pose);
+      }
     }
     catch (tf::TransformException &ex)
     {

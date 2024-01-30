@@ -190,7 +190,7 @@ Visualization Manager:
       Length: 2
       Name: Axes
       Radius: 0.100000001
-      Reference Frame: front_laser_link
+      Reference Frame: base_link ##front_laser_link
       Value: true
   Enabled: true
   Global Options:

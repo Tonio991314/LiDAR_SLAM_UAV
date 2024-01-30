@@ -12,7 +12,6 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
-
 include "map_builder.lua"
 include "trajectory_builder.lua"
 
@@ -20,8 +19,8 @@ options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
   map_frame = "map",
-  tracking_frame = "velodyne", -- this should be the link of IMU 
-  published_frame = "velodyne", -- use base_link while playing rosbag
+  tracking_frame = "imu_link",
+  published_frame = "base_link",
   odom_frame = "odom",
   provide_odom_frame = false,
   publish_frame_projected_to_2d = false, 
@@ -31,30 +30,23 @@ options = {
   use_nav_sat = false,
   use_landmarks = false,
 
-  num_laser_scans = 1,  -- to use topics like /scan   /laserscan
+  num_laser_scans = 1,
   num_multi_echo_laser_scans = 0,
-  num_subdivisions_per_laser_scan = 1, 
-  num_point_clouds = 0,   -- to use topics like /velodyne_points 
+  num_subdivisions_per_laser_scan = 1,
+  num_point_clouds = 0,
 
   lookup_transform_timeout_sec = 0.2,
-  submap_publish_period_sec = 0.3,    
-  pose_publish_period_sec = 5e-3,     
-  trajectory_publish_period_sec = 30e-3, 
+  submap_publish_period_sec = 0.3,
+  pose_publish_period_sec = 5e-3,
+  trajectory_publish_period_sec = 30e-3,
   rangefinder_sampling_ratio = 1.,
-  odometry_sampling_ratio = 1, -- pay attention to this if above parameters are set properly but still have error related to absence of fixed frame map
-  fixed_frame_pose_sampling_ratio = 1., 
+  odometry_sampling_ratio = 1.,
+  fixed_frame_pose_sampling_ratio = 1.,
   imu_sampling_ratio = 1.,
   landmarks_sampling_ratio = 1.,
 }
 
 MAP_BUILDER.use_trajectory_builder_2d = true
-MAP_BUILDER.num_background_threads = 6 -- Increase up to number of cores
---
-TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 1 --default value is 10; If map is being built but acts weird, then change this value to 1
---
---******************BY DEFAULT( those set in map_builder.lua and trajectory_builder.lua )***********************************
-
---TRAJECTORY_BUILDER.pure_localization=false -- not pure_localiztion
 
 TRAJECTORY_BUILDER_2D.min_range = 0.1
 TRAJECTORY_BUILDER_2D.max_range = 8.
@@ -67,54 +59,7 @@ TRAJECTORY_BUILDER_2D.motion_filter.max_time_seconds = 1
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 0.01
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 0.01
 
- 
-------------------SCAN MATCHER (FRONT END----LOCAL MAP----Lidar Odometry)
---There are two kind of scan matcher solution. One is CSM , another one is the optimizer Ceres given by Google. Ceres is set as default
-------CSM parameter
-TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true --true
-TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.linear_search_window = 0.1
-TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.translation_delta_cost_weight = 10.
-TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.rotation_delta_cost_weight = 0.1
-
-------Ceres parameter
--- TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 10 --10
--- TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 40 ---4e2 originally , increase it for avoiding new submaps being added at an angle
--- TRAJECTORY_BUILDER_2D.voxel_filter_size = 0.08
--- TRAJECTORY_BUILDER_2D.adaptive_voxel_filter.max_range = 5
--- TRAJECTORY_BUILDER_2D.adaptive_voxel_filter.min_num_points = 30
--- TRAJECTORY_BUILDER_2D.adaptive_voxel_filter.max_range = 10
--- TRAJECTORY_BUILDER_2D.adaptive_voxel_filter.max_length = 1
-
-
---POSE GRAPH problem, refer to Cartographer tuning file 
-POSE_GRAPH.optimization_problem.huber_scale = 30 --10
-POSE_GRAPH.optimization_problem.odometry_rotation_weight= 0
-
------------------TUNE THESE PARAMETERS FOR LOW LATENCY-------------------------------
-
-------------Global SLAM (Graph optimization by Ceres, BACK END)------------
-POSE_GRAPH.optimize_every_n_nodes = 80 -- Decrease --original 1 | 90 (it should not be too large or there will be a lot of problem)
--- POSE_GRAPH.global_sampling_ratio = 0.0001 -- Decrease 0.00001 originally (X)
--- POSE_GRAPH.constraint_builder.sampling_ratio = 0.03 -- Decrease 0.0001 (X)
-POSE_GRAPH.constraint_builder.min_score = 0.65 -- Increase 0.8 
--- POSE_GRAPH.constraint_builder.max_constraint_distance = 15
--- --POSE_GRAPH.global_constraint_search_after_n_seconds = 20 -- Increase ,orginally 20 (X)
--- POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 10
--- POSE_GRAPH.constraint_builder.global_localization_min_score = 0.1
---TRAJECTORY_BUILDER_2D.ceres_scan_matcher.ceres_solver_options.max_num_iterations = 5 -- Decrease
-
----------Global/Local SLAM(FIND LOOP CLOSURE)---------
--- TRAJECTORY_BUILDER_2D.adaptive_voxel_filter.min_num_points = 100 -- Decrease
--- TRAJECTORY_BUILDER_2D.adaptive_voxel_filter.max_range = 10. -- Decrease
--- TRAJECTORY_BUILDER_2D.adaptive_voxel_filter.max_length = 1.0 -- Increase
--- TRAJECTORY_BUILDER_2D.loop_closure_adaptive_voxel_filter.min_num_points = 40 -- Decrease  originally 50
--- TRAJECTORY_BUILDER_2D.loop_closure_adaptive_voxel_filter.max_range = 10. -- Decrease
--- TRAJECTORY_BUILDER_2D.loop_closure_adaptive_voxel_filter.max_length = 2.0 -- Increase 1.8
---TRAJECTORY_BUILDER_2D.voxel_filter_size = 0.05 -- Increase
---TRAJECTORY_BUILDER_2D.submaps.resolution = 0.05 -- Increase
-TRAJECTORY_BUILDER_2D.submaps.num_range_data = 30 -- Decrease   (important,control submap number)
---TRAJECTORY_BUILDER_2D.max_range = 15. -- Decrease
-
--------------------------------------------------------------------------------------
+POSE_GRAPH.constraint_builder.min_score = 0.65
+POSE_GRAPH.constraint_builder.global_localization_min_score = 0.7
 
 return options

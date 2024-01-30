@@ -23,9 +23,11 @@
   <arg name="configuration_basenames" default="offline_2d.lua"/>
   <arg name="urdf_filenames" default="$(find cartographer_ros)/urdf/offline_2d.urdf"/>
   <arg name="launch_prefix" default=""/>
+  
 
-  <remap from="scan" to="/scan" />
-  <remap from="imu" to="/imu/data" />
+  <!-- <remap from="point2" to="/velodyne_points" /> -->
+  <!-- <remap from="scan" to="/scan" /> -->
+  <!-- <remap from="imu" to="/imu/data" /> -->
 
   <include file="$(find cartographer_ros)/launch/offline_node.launch">
     <arg name="bag_filenames" value="/home/drone/catkin_ws/cartographer_detailed_comments_ws/bag_file/$(arg id)/$(arg bag_filenames)"/>
@@ -34,6 +36,6 @@
     <arg name="configuration_directory" value="$(arg configuration_directory)"/>
     <arg name="configuration_basenames" value="$(arg configuration_basenames)"/>
     <arg name="urdf_filenames" value="$(arg urdf_filenames)"/>
-    <arg name="launch_prefix" value="$(arg launch_prefix)"/>
+    <arg name="launch_prefix" value="$(arg launch_prefix)"/> 
   </include>
 </launch>
